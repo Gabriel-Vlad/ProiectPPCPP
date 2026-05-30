@@ -1,0 +1,9 @@
+CompileFlags:
+  Add:
+    - -std=c++23
+    - -IC:/msys64/mingw64/include
+    - -IC:/msys64/mingw64/include/c++/15.2.0
+    - -IC:/msys64/mingw64/include/c++/15.2.0/x86_64-w64-mingw32
+    - --target=x86_64-w64-mingw32
+  Remove:
+    - -W*
