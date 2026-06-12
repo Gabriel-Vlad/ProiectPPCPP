@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     UtilizatorService utilizatorService;
 
     try {
-        // ── User commands ─────────────────────────────────────────────────────
+        // User commands
         if (comanda == "vizualizare_utilizatori") {
             if (argc != 2) throw std::invalid_argument("Utilizare: app2 vizualizare_utilizatori");
             utilizatorService.vizualizareUtilizatori();
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
             if (argc != 3) throw std::invalid_argument("Utilizare: app2 stergere_utilizator <id>");
             utilizatorService.stergereUtilizator(argv[2]);
 
-        // ── Enrollment commands ───────────────────────────────────────────────
+        // Enrollment commands
         } else if (comanda == "vizualizare_cursuri_inscrise") {
             if (argc != 3) throw std::invalid_argument("Utilizare: app2 vizualizare_cursuri_inscrise <id_user>");
             inscriereService.vizualizareCursuriInscrise(argv[2]);

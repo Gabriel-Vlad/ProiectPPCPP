@@ -9,17 +9,17 @@ const std::string& Utilizator::getId()   const { return id; }
 const std::string& Utilizator::getNume() const { return nume; }
 
 // One user per line: "<id> <nume>".
-void Utilizator::serialize(std::ostream& os) const {
-    os << id << " " << nume << "\n";
+void Utilizator::serialize(std::ostream& out) const {
+    out << id << " " << nume << "\n";
 }
 
 // Reads back one "<id> <nume>" line.
 // The name can contain spaces, so we cannot simply do "ss >> id >> nume"
 // (that would stop at the first space). Instead: extract the first token as
 // the id, then take the entire rest of the line as the name.
-Utilizator Utilizator::deserialize(std::istream& is) {
+Utilizator Utilizator::deserialize(std::istream& in) {
     std::string line;
-    std::getline(is, line);
+    std::getline(in, line);
     std::istringstream ss(line);
     std::string id;
     ss >> id;
@@ -31,7 +31,7 @@ Utilizator Utilizator::deserialize(std::istream& is) {
 }
 
 // Format: "[<id>] <nume>"
-std::ostream& operator<<(std::ostream& os, const Utilizator& u) {
-    os << "[" << u.id << "] " << u.nume;
-    return os;
+std::ostream& operator<<(std::ostream& out, const Utilizator& u) {
+    out << "[" << u.id << "] " << u.nume;
+    return out;
 }

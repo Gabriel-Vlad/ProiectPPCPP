@@ -19,6 +19,8 @@
 // decides its own on-disk format.
 template <typename T>
 class Repository {
+private:
+    std::string filepath;  // path to the data file this repository manages
 public:
     // Binds this repository to one data file. No I/O happens here —
     // the file is opened only when loadAll/saveAll are called.
@@ -33,7 +35,7 @@ public:
 
         // There is no record count stored in the file, so we read until EOF.
         // "file >> std::ws" skips whitespace (including the newline left over
-        // from the previous record) BEFORE checking eof() — without it, a
+        // from the previous record) before checking eof() — without it, a
         // trailing newline at the end of the file would look like one more
         // record and we would deserialize a garbage object.
         std::vector<T> items;
@@ -54,7 +56,4 @@ public:
         for (const auto& item : items)
             item.serialize(file);
     }
-
-private:
-    std::string filepath;  // path to the data file this repository manages
 };

@@ -9,8 +9,8 @@ CursService::CursService()
     : repo(std::make_unique<Repository<Curs>>(CURSURI_FILE)),
       inscriereRepo(std::make_unique<Repository<Inscriere>>(INSCRIERI_FILE)) {}
 
-// ── Private helpers ───────────────────────────────────────────────────────────
-
+// Private helpers
+//
 // Converts a price string to a number and validates it.
 // Shared by adaugareCurs and modificareCurs so the rules stay identical.
 static double parsePret(const std::string& s) {
@@ -25,8 +25,7 @@ static double parsePret(const std::string& s) {
     return pret;
 }
 
-// ── Course operations ─────────────────────────────────────────────────────────
-
+// Course operations
 std::vector<Curs> CursService::getCursuri() const {
     return repo->loadAll();
 }
@@ -41,8 +40,7 @@ void CursService::vizualizareCursuri() const {
         std::cout << c << "\n";
 }
 
-void CursService::adaugareCurs(const std::string& titlu,
-                               const std::string& descriere, const std::string& pretStr) {
+void CursService::adaugareCurs(const std::string& titlu, const std::string& descriere, const std::string& pretStr) {
     if (titlu.empty()) throw std::invalid_argument("Titlul cursului nu poate fi gol.");
     validateNoNewline(titlu,    "Titlul");
     validateNoNewline(descriere,"Descrierea");
@@ -75,8 +73,7 @@ void CursService::stergereCurs(const std::string& id) {
     std::cout << Color::GREEN << "Cursul \"" << titlu << "\" a fost sters." << Color::RESET << "\n";
 }
 
-void CursService::modificareCurs(const std::string& camp, const std::string& id,
-                                  const std::string& valoare) {
+void CursService::modificareCurs(const std::string& camp, const std::string& id, const std::string& valoare) {
     if (valoare.empty())
         throw std::invalid_argument("Valoarea noua nu poate fi goala.");
     if (camp == "titlu" || camp == "descriere")
@@ -101,10 +98,8 @@ void CursService::modificareCurs(const std::string& camp, const std::string& id,
     std::cout << Color::GREEN << "Cursul [" << id << "] a fost actualizat (camp: " << camp << ")." << Color::RESET << "\n";
 }
 
-// ── Lesson operations ─────────────────────────────────────────────────────────
-
-void CursService::adaugareLectie(const std::string& id_curs,
-                                  const std::string& titlu, const std::string& durataStr) {
+// Lesson operations
+void CursService::adaugareLectie(const std::string& id_curs, const std::string& titlu, const std::string& durataStr) {
     if (titlu.empty()) throw std::invalid_argument("Titlul lectiei nu poate fi gol.");
     validateNoNewline(titlu, "Titlul lectiei");
 

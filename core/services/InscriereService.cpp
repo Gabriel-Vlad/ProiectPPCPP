@@ -11,15 +11,14 @@ InscriereService::InscriereService()
       inscriereRepo(std::make_unique<Repository<Inscriere>>(INSCRIERI_FILE)),
       utilizatorRepo(std::make_unique<Repository<Utilizator>>(UTILIZATORI_FILE)) {}
 
-// ── Private helpers ───────────────────────────────────────────────────────────
-
+// Private helpers
+//
 // Finds the enrollment matching a (user, course) pair — both must match,
 // because a user can be enrolled in many courses and a course has many users.
 // Returns end() when not found; the caller must check before dereferencing.
 // Declared as a template so it accepts const and non-const vectors alike.
 template<typename Vec>
-static auto findInscriere(Vec& inscrieri,
-                          const std::string& id_user, const std::string& id_curs) {
+static auto findInscriere(Vec& inscrieri, const std::string& id_user, const std::string& id_curs) {
     return std::ranges::find_if(inscrieri, [&](const Inscriere& i) {
         return i.getIdUser() == id_user && i.getIdCurs() == id_curs;
     });
@@ -71,8 +70,7 @@ void InscriereService::toggleLectie(const std::string& id_user, const std::strin
               << (finalizeaza ? "finalizata." : "nefinalizata.") << Color::RESET << "\n";
 }
 
-// ── Enrollment operations ─────────────────────────────────────────────────────
-
+// Enrollment operations
 std::vector<Inscriere> InscriereService::getInscrieri() const { return inscriereRepo->loadAll(); }
 
 void InscriereService::vizualizareCursuriInscrise(const std::string& id_user) const {
@@ -128,22 +126,18 @@ void InscriereService::dezinscriere(const std::string& id_user, const std::strin
     std::cout << Color::GREEN << "Utilizatorul " << id_user << " a fost dezinscris din cursul [" << id_curs << "]." << Color::RESET << "\n";
 }
 
-// ── Lesson completion ─────────────────────────────────────────────────────────
-
+// Lesson completion
+//
 // Both public methods delegate to toggleLectie; only the direction differs.
-
-void InscriereService::finalizareLectie(const std::string& id_user, const std::string& id_curs,
-                                         const std::string& id_lectie) {
+void InscriereService::finalizareLectie(const std::string& id_user, const std::string& id_curs, const std::string& id_lectie) {
     toggleLectie(id_user, id_curs, id_lectie, true);
 }
 
-void InscriereService::nefinalizareLectie(const std::string& id_user, const std::string& id_curs,
-                                           const std::string& id_lectie) {
+void InscriereService::nefinalizareLectie(const std::string& id_user, const std::string& id_curs, const std::string& id_lectie) {
     toggleLectie(id_user, id_curs, id_lectie, false);
 }
 
-void InscriereService::vizualizareProgres(const std::string& id_user,
-                                           const std::string& id_curs) const {
+void InscriereService::vizualizareProgres(const std::string& id_user, const std::string& id_curs) const {
     auto cursuri   = cursRepo->loadAll();
     auto inscrieri = inscriereRepo->loadAll();
 

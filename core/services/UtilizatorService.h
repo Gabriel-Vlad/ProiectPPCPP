@@ -12,6 +12,11 @@
 // User IDs are kept dense (1, 2, 3...): when a user is deleted, everyone
 // after them shifts down by one, and inscrieri.txt is updated to match.
 class UtilizatorService {
+private:
+    // Smart pointers: each unique_ptr owns its repository and frees it
+    // automatically when the service is destroyed.
+    std::unique_ptr<Repository<Utilizator>> repo;
+    std::unique_ptr<Repository<Inscriere>>  inscriereRepo; // updated when IDs shift
 public:
     // Creates the repositories and binds them to the data files.
     UtilizatorService();
@@ -29,10 +34,4 @@ public:
 
     // Returns all registered users — used by the GUI to fill its lists.
     std::vector<Utilizator> getUtilizatori() const;
-
-private:
-    // Smart pointers: each unique_ptr owns its repository and frees it
-    // automatically when the service is destroyed.
-    std::unique_ptr<Repository<Utilizator>> repo;
-    std::unique_ptr<Repository<Inscriere>>  inscriereRepo; // updated when IDs shift
 };

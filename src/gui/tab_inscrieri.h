@@ -12,7 +12,7 @@ inline void drawTabInscrieri(AppState& st, float W, float H, float TOPBAR_H, flo
     const float contentH = H - TOPBAR_H - ImGui::GetFrameHeight() - 8.f;
     const float ITEM_H   = 62.f;
 
-    // ── Left panel ────────────────────────────────────────────────────────────
+    // Left panel
     ImGui::PushStyleColor(ImGuiCol_ChildBg, C_PANEL);
     ImGui::BeginChild("##ins_list", {LEFT_W, contentH}, ImGuiChildFlags_None);
 
@@ -55,11 +55,11 @@ inline void drawTabInscrieri(AppState& st, float W, float H, float TOPBAR_H, flo
 
     ImGui::SameLine();
 
-    // ── Right panel ───────────────────────────────────────────────────────────
+    // Right panel
     ImGui::PushStyleColor(ImGuiCol_ChildBg, C_BG);
     ImGui::BeginChild("##ins_detail", {W - LEFT_W - 2.f, contentH}, ImGuiChildFlags_None);
 
-    // ── Step 1: Select user ───────────────────────────────────────────────────
+    // Step 1: Select user
     // The step number lights up in accent color while the step is pending.
     ImGui::Spacing();
     ImGui::SetCursorPosX(PAD);
@@ -133,7 +133,7 @@ inline void drawTabInscrieri(AppState& st, float W, float H, float TOPBAR_H, flo
         }
     }
 
-    // ── Step 2: Select course hint ────────────────────────────────────────────
+    // Step 2: Select course hint
     ImGui::Spacing();
     ImGui::SetCursorPosX(PAD);
     ImGui::PushStyleColor(ImGuiCol_Text,
@@ -149,7 +149,7 @@ inline void drawTabInscrieri(AppState& st, float W, float H, float TOPBAR_H, flo
     ImGui::Separator();
     ImGui::Spacing();
 
-    // ── Content area ──────────────────────────────────────────────────────────
+    // Content area
     if (st.currentUser.empty() || st.selInscCurs < 0) {
         // Nothing to show yet — the step hints above tell the user what to do.
     } else {
@@ -203,7 +203,7 @@ inline void drawTabInscrieri(AppState& st, float W, float H, float TOPBAR_H, flo
         ImGui::Separator();
         ImGui::Spacing();
 
-        // ── Progress + lessons (only if enrolled) ─────────────────────────────
+        // Progress + lessons (only if enrolled)
         if (enrolled) {
             size_t total      = c.getLectii().size();
             size_t finalizate = insIt->getLectiiFinalizate().size();

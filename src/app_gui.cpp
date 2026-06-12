@@ -77,7 +77,7 @@ int main(int, char**) {
     const float LEFT_W   = 320.f;  // width of the course list panels
     const float PAD      = 12.f;   // default inner padding
 
-    // ── Main loop ─────────────────────────────────────────────────────────────
+    // Main loop
     // Classic immediate-mode loop: handle input events, rebuild the whole UI
     // from scratch, render, repeat — roughly 60 times per second (vsync).
     bool running = true;
@@ -98,7 +98,7 @@ int main(int, char**) {
         const float W = static_cast<float>(dispW);
         const float H = static_cast<float>(dispH);
 
-        // ── Full-screen root window ───────────────────────────────────────────
+        // Full-screen root window
         // One borderless ImGui window pinned to the OS window — it acts as the
         // canvas everything else is drawn into.
         ImGui::SetNextWindowPos({0, 0});
@@ -110,7 +110,7 @@ int main(int, char**) {
             ImGuiWindowFlags_NoScrollbar);
         ImGui::PopStyleVar();
 
-        // ── Top bar ───────────────────────────────────────────────────────────
+        // Top bar
         ImGui::SetCursorPos({0.f, 0.f});
         ImGui::PushStyleColor(ImGuiCol_ChildBg, C_PANEL);
         ImGui::BeginChild("##topbar", {W, TOPBAR_H}, ImGuiChildFlags_None,
@@ -146,7 +146,7 @@ int main(int, char**) {
         ImGui::EndChild();
         ImGui::PopStyleColor();
 
-        // ── Tab content ───────────────────────────────────────────────────────
+        // Tab content
         ImGui::SetCursorPos({0.f, TOPBAR_H});
         ImGui::PushStyleColor(ImGuiCol_ChildBg, C_BG);
         ImGui::BeginChild("##content", {W, H - TOPBAR_H}, ImGuiChildFlags_None,
@@ -170,12 +170,12 @@ int main(int, char**) {
         ImGui::EndChild();
         ImGui::End();
 
-        // ── Popups ────────────────────────────────────────────────────────────
+        // Popups
         // Drawn after the root window so they appear above everything.
         drawFormPopup(st, W, H);
         drawConfirmPopup(st, W, H);
 
-        // ── Render ────────────────────────────────────────────────────────────
+        // Render
         // ImGui::Render assembles the draw data; OpenGL clears the backbuffer,
         // draws it, and SwapWindow flips it onto the screen.
         ImGui::Render();

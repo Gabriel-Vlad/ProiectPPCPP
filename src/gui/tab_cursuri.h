@@ -58,11 +58,11 @@ inline void drawTabCursuri(AppState& st, float W, float H, float TOPBAR_H, float
         {divMin.x + LEFT_W + 1.f, divMin.y + contentH},
         IM_COL32(80, 80, 110, 255));
 
-    // ── Right panel — details + buttons ──────────────────────────────────────
+    // Right panel — details + buttons 
     ImGui::PushStyleColor(ImGuiCol_ChildBg, C_BG);
     ImGui::BeginChild("##curs_detail", {W - LEFT_W - 2.f, contentH}, ImGuiChildFlags_None);
 
-    // ── Action buttons ────────────────────────────────────────────────────────
+    // Action buttons
     ImGui::Spacing();
     ImGui::SetCursorPosX(PAD);
 
@@ -109,7 +109,7 @@ inline void drawTabCursuri(AppState& st, float W, float H, float TOPBAR_H, float
     ImGui::Separator();
     ImGui::Spacing();
 
-    // ── Course details ────────────────────────────────────────────────────────
+    // Course details
     if (st.selCurs < 0) {
         // Nothing selected — show a centered hint instead of empty space.
         float midY = contentH / 2.f;
