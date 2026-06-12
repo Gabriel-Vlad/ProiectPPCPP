@@ -3,7 +3,9 @@
 #include <iomanip>
 #include <optional>
 
-// Moves strings into members to avoid unnecessary copies.
+// Parameters are taken by value and moved into the members.
+// std::move avoids copying each string a second time: the constructor's local
+// copy hands its internal buffer directly to the member variable.
 Curs::Curs(std::string id, std::string titlu, std::string descriere, double pret)
     : id_curs(std::move(id)), titlu(std::move(titlu)),
       descriere(std::move(descriere)), pret(pret) {}
@@ -28,7 +30,7 @@ void Curs::addLectie(const Lectie& lectie) {
     lectii.push_back(lectie);
 }
 
-// Uses std::erase_if (C++20) to remove by id in a single pass.
+// std::erase_if (C++20) removes every matching element in a single pass.
 void Curs::removeLectie(const std::string& id_lectie) {
     std::erase_if(lectii, [&](const Lectie& l) {
         return l.getId() == id_lectie;
@@ -46,7 +48,14 @@ std::optional<Lectie> Curs::findLectie(const std::string& id_lectie) const {
 
 // ── Serialization ─────────────────────────────────────────────────────────────
 
-// Format: id, titlu, descriere, pret, numar_lectii, then each lesson on its own lines.
+// On-disk format — one field per line, so titles and descriptions may freely
+// contain spaces:
+//   <id>
+//   <titlu>
+//   <descriere>
+//   <pret>
+//   <numar_lectii>
+//   then for each lesson: <id> / <titlu> / <durata>, each on its own line.
 void Curs::serialize(std::ostream& os) const {
     os << id_curs << "\n" << titlu << "\n" << descriere << "\n" << pret << "\n";
     os << lectii.size() << "\n";
@@ -54,7 +63,10 @@ void Curs::serialize(std::ostream& os) const {
         os << l.getId() << "\n" << l.getTitlu() << "\n" << l.getDurata() << "\n";
 }
 
-// Reads fields line by line to correctly handle titles/descriptions with spaces.
+// Reads back the format written by serialize.
+// Mixing getline with ">>" needs care: ">>" reads a value but leaves the
+// newline behind it in the stream, so the next getline would read an empty
+// string. The is.ignore() calls consume exactly that leftover newline.
 Curs Curs::deserialize(std::istream& is) {
     std::string id, titlu, descriere;
     double pret;
@@ -62,7 +74,7 @@ Curs Curs::deserialize(std::istream& is) {
     std::getline(is, titlu);
     std::getline(is, descriere);
     is >> pret;
-    int n;
+    int n = 0;
     is >> n;
     is.ignore();
 
@@ -81,7 +93,7 @@ Curs Curs::deserialize(std::istream& is) {
 
 // ── Display ───────────────────────────────────────────────────────────────────
 
-// Prints price with 2 decimal places and lists all lessons indented.
+// Prints the price with exactly 2 decimals and lists all lessons indented.
 std::ostream& operator<<(std::ostream& os, const Curs& c) {
     os << "[" << c.id_curs << "] " << c.titlu << "\n"
        << "  Descriere : " << c.descriere << "\n"

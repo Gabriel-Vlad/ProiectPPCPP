@@ -1,42 +1,42 @@
-CXX       = g++
-CXXFLAGS  = -std=c++23 -Wall -Wextra
-BUILDDIR  = build
-SFML_INC  = -I C:/msys64/mingw64/include
-SFML_LIBS = -L C:/msys64/mingw64/lib -lsfml-graphics -lsfml-window -lsfml-system
+# Run executables from the project root so data/ and assets/ paths resolve.
+# Example: ./bin/app1.exe adaugare_curs "Titlu" "Desc" 99
 
-MODELS_SRC   = common/models/Lectie.cpp common/models/Curs.cpp common/models/Inscriere.cpp
-SERVICES_SRC = common/services/CursService.cpp common/services/InscriereService.cpp
-COMMON_SRC   = $(MODELS_SRC) $(SERVICES_SRC)
+CXX      = g++
+CXXFLAGS = -std=c++23 -Wall -Wextra
+BUILDDIR = build
+BINDIR   = bin
 
-MODELS_OBJ   = $(patsubst common/models/%.cpp,   $(BUILDDIR)/%.o, $(MODELS_SRC))
-SERVICES_OBJ = $(patsubst common/services/%.cpp, $(BUILDDIR)/%.o, $(SERVICES_SRC))
-COMMON_OBJ   = $(MODELS_OBJ) $(SERVICES_OBJ)
+IMGUI_DIR = imgui
+IMGUI_SRC = $(wildcard $(IMGUI_DIR)/imgui*.cpp)
+IMGUI_OBJ = $(patsubst $(IMGUI_DIR)/%.cpp, $(BUILDDIR)/imgui_%.o, $(IMGUI_SRC))
+IMGUI_INC = -I $(IMGUI_DIR) -I C:/msys64/mingw64/include -I C:/msys64/mingw64/include/SDL2
+GUI_LIBS  = -L C:/msys64/mingw64/lib -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lglew32
 
-all: $(BUILDDIR) app1 app2 app_gui
+CORE_OBJ = $(patsubst core/models/%.cpp,   $(BUILDDIR)/%.o, $(wildcard core/models/*.cpp)) \
+           $(patsubst core/services/%.cpp, $(BUILDDIR)/%.o, $(wildcard core/services/*.cpp))
 
-# Create build directory if it doesn't exist
-$(BUILDDIR):
-	if not exist $(BUILDDIR) mkdir $(BUILDDIR)
+all: $(BUILDDIR) $(BINDIR) app1 app2 app_gui
 
-# Compile model .cpp files
-$(BUILDDIR)/%.o: common/models/%.cpp common/models/%.h
+$(BUILDDIR) $(BINDIR):
+	mkdir -p $@
+
+$(BUILDDIR)/%.o: core/models/%.cpp core/models/%.h | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Compile service .cpp files
-$(BUILDDIR)/%.o: common/services/%.cpp common/services/%.h
+$(BUILDDIR)/%.o: core/services/%.cpp core/services/%.h | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-app1: src/app1.cpp $(COMMON_OBJ)
-	$(CXX) $(CXXFLAGS) -o app1 src/app1.cpp $(COMMON_OBJ)
+$(BUILDDIR)/imgui_%.o: $(IMGUI_DIR)/%.cpp | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) $(IMGUI_INC) -c $< -o $@
 
-app2: src/app2.cpp $(COMMON_OBJ)
-	$(CXX) $(CXXFLAGS) -o app2 src/app2.cpp $(COMMON_OBJ)
+app1: src/app1.cpp $(CORE_OBJ) | $(BINDIR)
+	$(CXX) $(CXXFLAGS) -o $(BINDIR)/app1 $< $(CORE_OBJ)
 
-app_gui: src/app_gui.cpp $(COMMON_OBJ)
-	$(CXX) $(CXXFLAGS) $(SFML_INC) -o app_gui src/app_gui.cpp $(COMMON_OBJ) $(SFML_LIBS)
+app2: src/app2.cpp $(CORE_OBJ) | $(BINDIR)
+	$(CXX) $(CXXFLAGS) -o $(BINDIR)/app2 $< $(CORE_OBJ)
+
+app_gui: src/app_gui.cpp $(CORE_OBJ) $(IMGUI_OBJ) | $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(IMGUI_INC) -o $(BINDIR)/app_gui $< $(CORE_OBJ) $(IMGUI_OBJ) $(GUI_LIBS)
 
 clean:
-	if exist app1.exe del app1.exe
-	if exist app2.exe del app2.exe
-	if exist app_gui.exe del app_gui.exe
-	if exist $(BUILDDIR) rmdir /s /q $(BUILDDIR)
+	rm -rf $(BUILDDIR) $(BINDIR)

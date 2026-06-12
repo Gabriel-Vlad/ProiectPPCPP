@@ -7,13 +7,18 @@
 #include <algorithm>
 #include <ranges>
 
-// Represents an enrollment of a user in a course.
-// Association relationship with Curs: an enrollment references a course but does not own it.
-// Tracks which lessons the user has completed.
+// An enrollment: links a user to a course and tracks which lessons of that
+// course the user has completed.
+// Association relationship with Curs: the enrollment only stores the course's
+// id — it does not own the course object itself.
 class Inscriere {
 public:
-    // Constructs an enrollment for the given user and course ids.
+    // Creates a fresh enrollment with no completed lessons.
     Inscriere(std::string id_user, std::string id_curs);
+
+    // Creates an enrollment with an already-known list of completed lessons.
+    // Used when user IDs are rebalanced and records must be rebuilt as-is.
+    Inscriere(std::string id_user, std::string id_curs, std::vector<std::string> lectii_finalizate);
 
     // ── Getters ──────────────────────────────────────────────────────────────
 
@@ -23,21 +28,21 @@ public:
 
     // ── Lesson completion ────────────────────────────────────────────────────
 
-    // Marks a lesson as completed. Does nothing if already marked.
+    // Marks a lesson as completed. Does nothing if it is already marked.
     void finalizareLectie(const std::string& id_lectie);
 
-    // Marks a lesson as not completed. Does nothing if not marked.
+    // Removes a lesson from the completed list. Does nothing if not marked.
     void nefinalizareLectie(const std::string& id_lectie);
 
-    // Returns true if the lesson with the given id is marked as completed.
+    // True if the given lesson id is in the completed list.
     bool esteLectieFinalizata(const std::string& id_lectie) const;
 
     // ── Serialization ────────────────────────────────────────────────────────
 
-    // Writes this enrollment to the output stream in the inscrieri.txt format.
+    // Writes this enrollment to the stream in the inscrieri.txt format.
     void serialize(std::ostream& os) const;
 
-    // Reads and constructs an Inscriere from the input stream.
+    // Reads one enrollment back from the stream (the reverse of serialize).
     static Inscriere deserialize(std::istream& is);
 
     // ── Display ──────────────────────────────────────────────────────────────
@@ -46,7 +51,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Inscriere& i);
 
 private:
-    std::string              id_user;
-    std::string              id_curs;
+    std::string              id_user;            // references Utilizator::id
+    std::string              id_curs;            // references Curs::id_curs
     std::vector<std::string> lectii_finalizate;  // ids of completed lessons
 };

@@ -1,9 +1,13 @@
 CompileFlags:
   Add:
     - -std=c++23
+    - -IC:/Users/1511s/Programming/Languages/C++/Facultate/ProiectPPC++/core
+    - -IC:/Users/1511s/Programming/Languages/C++/Facultate/ProiectPPC++/core/infra
     - -IC:/msys64/mingw64/include
+    - -IC:/msys64/mingw64/include/SDL2
     - -IC:/msys64/mingw64/include/c++/15.2.0
     - -IC:/msys64/mingw64/include/c++/15.2.0/x86_64-w64-mingw32
+    - -IC:/Users/1511s/Programming/Languages/C++/Facultate/ProiectPPC++/imgui
     - --target=x86_64-w64-mingw32
   Remove:
     - -W*

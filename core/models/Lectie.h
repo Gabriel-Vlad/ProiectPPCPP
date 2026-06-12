@@ -3,11 +3,12 @@
 #include <string>
 #include <ostream>
 
-// Represents a single lesson belonging to a course.
-// Composition relationship: a lesson cannot exist without its parent course.
+// A single lesson belonging to a course.
+// Composition relationship: a lesson never exists on its own — it lives inside
+// a Curs and is destroyed together with it.
 class Lectie {
 public:
-    // Constructs a lesson with a unique id, title and duration in minutes.
+    // Builds a lesson from its id, title and duration in minutes.
     Lectie(std::string id, std::string titlu, int durata_minute);
 
     // ── Getters ──────────────────────────────────────────────────────────────
@@ -23,11 +24,11 @@ public:
 
     // ── Display ──────────────────────────────────────────────────────────────
 
-    // Prints the lesson in the format: "<id> - <titlu> (<durata> min)"
+    // Prints the lesson as: "<id> - <titlu> (<durata> min)"
     friend std::ostream& operator<<(std::ostream& os, const Lectie& l);
 
 private:
-    std::string id_lectie;
+    std::string id_lectie;      // unique only within the parent course
     std::string titlu;
     int         durata_minute;
 };

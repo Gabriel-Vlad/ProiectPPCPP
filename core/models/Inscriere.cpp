@@ -1,9 +1,14 @@
 #include "Inscriere.h"
 #include <algorithm>
+#include <sstream>
 
-// Moves strings into members to avoid unnecessary copies.
+// Parameters are moved into the members to avoid copying the strings.
 Inscriere::Inscriere(std::string id_user, std::string id_curs)
     : id_user(std::move(id_user)), id_curs(std::move(id_curs)) {}
+
+Inscriere::Inscriere(std::string id_user, std::string id_curs, std::vector<std::string> lectii_finalizate)
+    : id_user(std::move(id_user)), id_curs(std::move(id_curs)),
+      lectii_finalizate(std::move(lectii_finalizate)) {}
 
 // ── Getters ───────────────────────────────────────────────────────────────────
 
@@ -13,46 +18,51 @@ const std::vector<std::string>& Inscriere::getLectiiFinalizate() const { return 
 
 // ── Lesson completion ─────────────────────────────────────────────────────────
 
-// Checks first to avoid duplicate entries in the completed lessons list.
+// The guard prevents the same lesson id from appearing twice in the list.
 void Inscriere::finalizareLectie(const std::string& id_lectie) {
     if (!esteLectieFinalizata(id_lectie))
         lectii_finalizate.push_back(id_lectie);
 }
 
-// Uses std::erase (C++20) to remove by value in a single pass.
+// std::erase (C++20) removes every occurrence of the value in one pass.
 void Inscriere::nefinalizareLectie(const std::string& id_lectie) {
     std::erase(lectii_finalizate, id_lectie);
 }
 
 bool Inscriere::esteLectieFinalizata(const std::string& id_lectie) const {
-    return std::ranges::find(lectii_finalizate, id_lectie) != lectii_finalizate.end();
+    return std::ranges::contains(lectii_finalizate, id_lectie);
 }
 
 // ── Serialization ─────────────────────────────────────────────────────────────
 
-// Format: id_user, id_curs, numar_lectii_finalizate, then each completed lesson id.
+// On-disk format (matches the project specification):
+//   <id_user> <id_curs> <numar_lectii_finalizate>
+//   <id_lectie_1> <id_lectie_2> ...        <- this line only exists if count > 0
 void Inscriere::serialize(std::ostream& os) const {
-    os << id_user << "\n" << id_curs << "\n";
-    os << lectii_finalizate.size() << "\n";
-    for (const auto& id : lectii_finalizate)
-        os << id << "\n";
+    os << id_user << " " << id_curs << " " << lectii_finalizate.size() << "\n";
+    for (const auto& id : lectii_finalizate) os << id << " ";
+    if (!lectii_finalizate.empty()) os << "\n";
 }
 
-// Reads fields line by line to correctly handle ids that may contain spaces.
+// Reads back the format written by serialize. The count on the first line
+// tells us whether a second line with lesson ids follows at all.
 Inscriere Inscriere::deserialize(std::istream& is) {
-    std::string id_user, id_curs;
-    std::getline(is, id_user);
-    std::getline(is, id_curs);
+    std::string line;
+    std::getline(is, line);
+    std::istringstream ss(line);
 
-    int n;
-    is >> n;
-    is.ignore();
+    std::string id_user, id_curs;
+    int n = 0;
+    ss >> id_user >> id_curs >> n;
 
     Inscriere ins(id_user, id_curs);
-    for (int i = 0; i < n; i++) {
+    if (n > 0) {
+        std::string lline;
+        std::getline(is, lline);
+        std::istringstream ls(lline);
         std::string id_lectie;
-        std::getline(is, id_lectie);
-        ins.finalizareLectie(id_lectie);
+        while (ls >> id_lectie)
+            ins.finalizareLectie(id_lectie);
     }
     return ins;
 }

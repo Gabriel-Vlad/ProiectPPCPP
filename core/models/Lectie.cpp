@@ -1,6 +1,8 @@
 #include "Lectie.h"
 
-// Moves strings into members to avoid unnecessary copies.
+// Parameters are taken by value and then moved into the members.
+// std::move turns a copy into a cheap "steal the contents" operation —
+// the caller's string is left empty and no duplicate allocation happens.
 Lectie::Lectie(std::string id, std::string titlu, int durata_minute)
     : id_lectie(std::move(id)), titlu(std::move(titlu)), durata_minute(durata_minute) {}
 
