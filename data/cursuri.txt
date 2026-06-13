@@ -2,12 +2,45 @@
 LFTA
 Nu intelegi nimic
 99.9
-1
+2
 1
 Ieraria Chomsky
 90
 2
-EGETRGH
-VGREGER
+Automate Push-Down
+90
+2
+Drept civil
+Aceasta materie este destinata Facultatii de Drept.
 99
-0
+1
+1
+Introducere
+50
+3
+P2
+Materie destinata pentru programare 2, anul 1.
+129.99
+2
+1
+Mosteniri
+90
+2
+Rezolutii finale
+30
+4
+Introducere in AI
+Acest curs se bazeaza pe legaturile neuronale formate de AI.
+249.99
+1
+1
+LLM-uri populare
+120
+5
+CyberSecurity
+Acest curs te invata sa faci reverse engineering.
+212.59
+1
+1
+Reverse Engineering
+120
