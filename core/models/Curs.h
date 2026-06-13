@@ -49,7 +49,7 @@ public:
     std::optional<Lectie> findLectie(const std::string& id_lectie) const;
 
     // Serialization
-
+    //
     // Writes this course (and all its lessons) in the cursuri.txt format
     void serialize(std::ostream& out) const;
 

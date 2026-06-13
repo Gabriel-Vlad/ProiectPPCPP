@@ -11,7 +11,7 @@ inline void drawTabCursuri(AppState& st, float W, float H, float TOPBAR_H, float
     const float contentH = H - TOPBAR_H - ImGui::GetFrameHeight() - 8.f;  // space below top bar + tab bar
     const float ITEM_H   = 62.f;                                          // height of one course row
 
-    // ── Left panel — course list ──────────────────────────────────────────────
+    // Left panel — course list
     ImGui::PushStyleColor(ImGuiCol_ChildBg, C_PANEL);
     ImGui::BeginChild("##curs_list", {LEFT_W, contentH}, ImGuiChildFlags_None);
 
